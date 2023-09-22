@@ -26,11 +26,11 @@ class MyApp extends StatelessWidget {
 class _HomeScreenState extends State<HomeScreen>{
 
   DateTime selectedDate = DateTime.now();
-  String selectedHour = '1';
-  String customerName = '';
+  String? selectedHour = '1';
+  String? customerName = '';
   DateTime? date;
   int? hoursUsed;
-  String description = '';
+  String? description = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -74,11 +74,20 @@ class _HomeScreenState extends State<HomeScreen>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Customer Name'),
+                      onSaved: (value) {
+                      customerName = value;
+                    },
                   ),
                   TextFormField(
                   decoration: InputDecoration(labelText: 'Date'),
+                    onSaved: (value) {
+                      if (value != null) {
+                       date = DateTime.parse(value);
+                      }
+                    },
                   onTap: () {
                     _selectDate(context);  // Call the date picker function
                   },
@@ -86,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen>{
                   controller: TextEditingController(
                     text: selectedDate.toLocal().toString().split(' ')[0] // Display the selected date
                   ),
-                ),
+                   ),
                   DropdownButtonFormField<String>(
                     value: selectedHour,
                     items: ['1', '2', '3', '4', '5'].map((String value) {
@@ -101,10 +110,16 @@ class _HomeScreenState extends State<HomeScreen>{
                       });
                     },
                     decoration: InputDecoration(labelText: 'Hours Used'),
+                      onSaved: (value) {
+                      hoursUsed = int.tryParse(value ?? '');
+                    },
                   ),
 
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Description'),
+                      onSaved: (value) {
+                      description = value;
+                    },
                   ),
                 ],
               ),
@@ -124,11 +139,10 @@ class _HomeScreenState extends State<HomeScreen>{
                     child: Text('View Entries'),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      //  Handle form submission
-                    },
+                    onPressed: _saveForm,  // Call _saveForm when the button is pressed
                     child: Text('Submit'),
                   ),
+
  
                 ],
               ),
