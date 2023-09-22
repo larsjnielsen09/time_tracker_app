@@ -82,10 +82,6 @@ class _HomeScreenState extends State<HomeScreen>{
                     },
                     decoration: InputDecoration(labelText: 'Hours Used'),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Hours Used'), 
-                    keyboardType: TextInputType.number,
-                  ),
 
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Description'),
