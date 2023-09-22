@@ -27,6 +27,12 @@ class _HomeScreenState extends State<HomeScreen>{
 
   DateTime selectedDate = DateTime.now();
   String selectedHour = '1';
+  String customerName = '';
+  DateTime? date;
+  int? hoursUsed;
+  String description = '';
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -41,6 +47,19 @@ class _HomeScreenState extends State<HomeScreen>{
       });
   }
 
+  void _saveForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState?.save();
+    print(customerName);
+    print(date);
+    print(hoursUsed);
+    print(description);
+    // Here, you can write code to save these to a database
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen>{
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Form(
+              key: _formKey, // Assign the GlobalKey to the Form
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
