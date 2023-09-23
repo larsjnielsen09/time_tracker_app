@@ -77,10 +77,20 @@ class _HomeScreenState extends State<HomeScreen>{
 
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Customer Name'),
-                      onSaved: (value) {
-                      customerName = value;
-                    },
+                    onSaved: (value) {
+                      if (value != null) {
+                        customerName = value;
+                      }
+                  },
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                      return 'Please enter a customer name';
+                      }
+                      return null;
+                  },
+ 
                   ),
+
                   TextFormField(
                   decoration: InputDecoration(labelText: 'Date'),
                     onSaved: (value) {
@@ -88,6 +98,12 @@ class _HomeScreenState extends State<HomeScreen>{
                        date = DateTime.parse(value);
                       }
                     },
+                  validator: (value) {
+                    if (value?.isEmpty ?? true) {
+                      return 'Please enter a date';
+                    }
+                    return null;
+                  },
                   onTap: () {
                     _selectDate(context);  // Call the date picker function
                   },
@@ -96,9 +112,11 @@ class _HomeScreenState extends State<HomeScreen>{
                     text: selectedDate.toLocal().toString().split(' ')[0] // Display the selected date
                   ),
                    ),
+
+
                   DropdownButtonFormField<String>(
                     value: selectedHour,
-                    items: ['1', '2', '3', '4', '5'].map((String value) {
+                    items: ['1', '2', '3', '4', '5', '6', '7'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -118,9 +136,18 @@ class _HomeScreenState extends State<HomeScreen>{
                   TextFormField(
                     decoration: InputDecoration(labelText: 'Description'),
                       onSaved: (value) {
-                      description = value;
-                    },
+                        if (value != null) {
+                          description = value;
+                        }
+                      },
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Please enter a description';
+                        }
+                        return null;
+                      }, 
                   ),
+                  
                 ],
               ),
             ),

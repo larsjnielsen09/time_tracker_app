@@ -1,0 +1,54 @@
+GIT
+
+START
+Initialize Git:
+    git init
+git status
+
+
+
+RESPOSITORY ON GITHUB
+Make a new respository on GitHub
+
+Linking Local Repository to Remote:
+    git remote add origin [Your-Repository-URL]
+    git push -u origin master
+Add Files: Run git add . to stage all files for the initial commit. This will include all files that are not specified in the .gitignore.
+    git add .
+    git commit -m "Initial commit" // commit the staged files to the local repository
+
+
+NEW BRANCH:
+Create a New Branch
+    git checkout -b [new-branch-name]
+
+Push Branch to Remote:
+    git push -u origin [new-branch-name]
+
+
+MERGE:
+Switch to Master Branch
+    git checkout master
+
+    Update Master: Update your local master branch - Ikke nødvendigt hvis ingen andre arbejder på remote Branch
+        git pull origin master
+
+Merge Branch:
+    git merge [new-branch-name]
+
+Push to Remote: Push the changes to the remote repository
+    git push origin master
+
+Switch Back to Feature Branch
+    git checkout [new-branch-name]
+
+
+
+.gitignore 
+    This file is a special file used by Git to determine which files and directories to 
+    ignore when committing changes to a repository.Place in root folder of project
+Add .gitignore to an Existing project
+    git rm -r --cached .
+    git add .
+    git commit -m "Apply .gitignore"
+
