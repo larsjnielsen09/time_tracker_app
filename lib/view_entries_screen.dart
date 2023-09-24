@@ -5,17 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ViewEntriesScreen extends StatelessWidget {
 
-  // Future<List<Map<String, dynamic>>> fetchData() async {
-  //   final response = await http.get(Uri.parse('https://service112.dk/api/api.php'));
-
-  //   if (response.statusCode == 200) {
-  //     return List<Map<String, dynamic>>.from(json.decode(response.body));
-  //   } else {
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
-
-    Future<List<Map<String, dynamic>>> fetchData() async {
+  Future<List<Map<String, dynamic>>> fetchData() async {
   final response = await http.get(Uri.parse('https://service112.dk/api/api.php'));
 
   if (response.statusCode == 200) {
@@ -29,7 +19,6 @@ class ViewEntriesScreen extends StatelessWidget {
     throw Exception('Failed to load data');
   }
 }
-
 
     @override
   Widget build(BuildContext context) {
@@ -47,13 +36,21 @@ class ViewEntriesScreen extends StatelessWidget {
           } else {
             return ListView.builder(
               itemCount: snapshot.data?.length ?? 0,
-              itemBuilder: (context, index) {
+             itemBuilder: (BuildContext context, int index) {
+
                 return ListTile(
                   title: Text(snapshot.data?[index]['kunde'] ?? 'Unknown'),
-                  subtitle: Text(snapshot.data?[index]['description'] ?? 'No description'),
-
-                  // Add more fields here
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Date: ${snapshot.data?[index]['dato'] ?? 'Unknown'}'),
+                      Text('Hours: ${snapshot.data?[index]['timer'] ?? 'Unknown'}'),
+                      Text('Description: ${snapshot.data?[index]['description'] ?? 'No description'}'),
+                    ],
+                  ),
                 );
+
+
               },
             );
           }
