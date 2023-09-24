@@ -34,13 +34,14 @@ Switch to Master Branch
         git pull origin master
 
 Merge Branch:
-    git merge [new-branch-name]
+    git merge major_changes
+
 
 Push to Remote: Push the changes to the remote repository
     git push origin master
 
 Switch Back to Feature Branch
-    git checkout [new-branch-name]
+    git checkout major_changes
 
 
 

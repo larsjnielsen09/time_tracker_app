@@ -14,12 +14,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
     die(json_encode(['error' => "Connection failed: " . $conn->connect_error]));
-}else{
-    echo json_encode(['success' => "Connected successfully"]);
 }
 
-// Your CRUD operations will go here
-// After your database connection code
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Assuming you're receiving JSON payload
     $data = json_decode(file_get_contents("php://input"), true);
