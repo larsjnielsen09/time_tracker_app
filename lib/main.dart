@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'add_entry_screen.dart';  // Import the AddEntryScreen class
 import 'view_entries_screen.dart';  // Import the ViewEntriesScreen class
 
+
 void main() {
   runApp(MyApp());
 }
@@ -27,9 +28,9 @@ class _HomeScreenState extends State<HomeScreen>{
 
   DateTime selectedDate = DateTime.now();
   String? selectedHour = '1';
-  String? customerName = '';
-  DateTime? date;
-  int? hoursUsed;
+  String? kunde = '';
+  DateTime? dato;
+  int? timer;
   String? description = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -53,9 +54,9 @@ class _HomeScreenState extends State<HomeScreen>{
       return;
     }
     _formKey.currentState?.save();
-    print(customerName);
-    print(date);
-    print(hoursUsed);
+    print(kunde);
+    print(dato);
+    print(timer);
     print(description);
     // Here, you can write code to save these to a database
   }
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     decoration: InputDecoration(labelText: 'Customer Name'),
                     onSaved: (value) {
                       if (value != null) {
-                        customerName = value;
+                        kunde = value;
                       }
                   },
                     validator: (value) {
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen>{
                   decoration: InputDecoration(labelText: 'Date'),
                     onSaved: (value) {
                       if (value != null) {
-                       date = DateTime.parse(value);
+                       dato = DateTime.parse(value);
                       }
                     },
                   validator: (value) {
@@ -129,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     },
                     decoration: InputDecoration(labelText: 'Hours Used'),
                       onSaved: (value) {
-                      hoursUsed = int.tryParse(value ?? '');
+                      timer = int.tryParse(value ?? '');
                     },
                   ),
 
