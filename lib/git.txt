@@ -1,3 +1,10 @@
+Start emulator cmd-prompt
+C:\Users\info>C:\Users\info\AppData\Local\Android\Sdk\emulator\emulator -list-avds
+    result: Pixel_2_API_29
+
+C:\Users\info>C:\Users\info\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_2_API_29
+
+
 GIT
 
 START

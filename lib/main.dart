@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'add_entry_screen.dart';  // Import the AddEntryScreen class
 import 'view_entries_screen.dart';  // Import the ViewEntriesScreen class
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 
 void main() {
@@ -48,7 +51,31 @@ class _HomeScreenState extends State<HomeScreen>{
       });
   }
 
-  void _saveForm() {
+Future<void> insertData() async {
+  final url = Uri.parse('https://service112.dk/api/api.php');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({
+      'kunde': kunde,
+      'dato': dato?.toIso8601String(),
+      'timer': timer,
+      'description': description,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print('Data inserted successfully');
+  } else {
+    print('Failed to insert data');
+  }
+}
+
+
+  void _saveForm() async {
+    
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) {
       return;
@@ -59,6 +86,10 @@ class _HomeScreenState extends State<HomeScreen>{
     print(timer);
     print(description);
     // Here, you can write code to save these to a database
+     // Call insertData to post the form data to your API
+  await insertData();  // Note: Awaiting the async function
+
+  _formKey.currentState?.reset();
   }
 
   @override
