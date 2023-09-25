@@ -95,7 +95,7 @@ Future<void> insertData() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('TimeTracker')),
+      appBar: AppBar(title: Text('TimeTracker, by Lars Nielsen')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

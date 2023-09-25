@@ -18,6 +18,38 @@ class _ViewEntriesScreenState extends State<ViewEntriesScreen> {
     _loadMoreTasks();  // Fetch initial data when the widget is created
   }
 
+Future<bool> deleteTask(int taskId) async {
+  final String apiUrl = 'https://service112.dk/api/api.php';
+  
+  // Construct the request payload
+  final Map<String, dynamic> payload = {'id': taskId};
+  
+  // Send the DELETE request
+  final response = await http.delete(
+    Uri.parse(apiUrl),
+    body: json.encode(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  // Parse the response
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> responseBody = json.decode(response.body);
+    if (responseBody['status'] == 'success') {
+      return true;
+    } else {
+      print('Error deleting task: ${responseBody['message']}');
+      return false;
+    }
+  } else {
+    print('Error deleting task with status code: ${response.statusCode}');
+    return false;
+  }
+}
+
+
+
 Future<List<Map<String, dynamic>>> fetchData({int page = 1, int limit = 5}) async {
   try {
     final response = await http.get(Uri.parse('https://service112.dk/api/api.php?page=$page&limit=$limit'));
@@ -59,6 +91,7 @@ void _loadMoreTasks() {
 
 
 @override
+
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
@@ -93,20 +126,32 @@ Widget _buildListView() {
         );
       }
       return ListTile(
-        title: Text(_tasks[index]['kunde'] ?? 'Unknown'),
+        title: Text(_tasks[index]['kunde'] ?? 'Unknown'), // Changed snapshot.data to _tasks
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Date: ${_tasks[index]['dato'] ?? 'Unknown'}'),
-            Text('Hours: ${_tasks[index]['timer'] ?? 'Unknown'}'),
-            Text('Description: ${_tasks[index]['description'] ?? 'No description'}'),
+            Text('Date: ${_tasks[index]['dato'] ?? 'Unknown'}'), // Changed snapshot.data to _tasks
+            Text('Hours: ${_tasks[index]['timer'] ?? 'Unknown'}'), // Changed snapshot.data to _tasks
+            Text('Description: ${_tasks[index]['description'] ?? 'No description'}'), // Changed snapshot.data to _tasks
           ],
         ),
+
+        trailing: ElevatedButton(
+          onPressed: () async {
+            int taskId = int.parse(_tasks[index]['id']);
+            bool result = await deleteTask(taskId);
+            if (result) {
+              setState(() {
+                _tasks.removeAt(index);
+              });
+            }
+          },
+          child: Text('Delete'),
+        ),
+
       );
     },
   );
 }
-
-
 
 }
