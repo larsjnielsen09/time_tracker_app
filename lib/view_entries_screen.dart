@@ -18,6 +18,45 @@ class _ViewEntriesScreenState extends State<ViewEntriesScreen> {
     _loadMoreTasks();  // Fetch initial data when the widget is created
   }
 
+// Inside your function where the delete action is triggered, insert the following code:
+
+Future<bool> _confirmDelete(int taskId) async {
+  return await showDialog<bool>(
+    context: context,
+    barrierDismissible: false, // User must tap a button to close the dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirm Delete'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Text>[
+              Text('Are you sure you want to delete?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(false);  // Return false
+            },
+          ),
+          TextButton(
+            child: Text('Confirm'),
+            onPressed: () async {
+              // Call your delete function here, for example:
+              bool success = await deleteTask(taskId);
+              Navigator.of(context).pop(success);  // Return true or false based on the deleteTask result
+            },
+          ),
+        ],
+      );
+    },
+  ) ?? false;  // Return false if user dismisses the dialog
+}
+
+
+
 Future<bool> deleteTask(int taskId) async {
   final String apiUrl = 'https://service112.dk/api/api.php';
   
@@ -137,17 +176,19 @@ Widget _buildListView() {
         ),
 
         trailing: ElevatedButton(
-          onPressed: () async {
+          onPressed: () {
             int taskId = int.parse(_tasks[index]['id']);
-            bool result = await deleteTask(taskId);
-            if (result) {
-              setState(() {
-                _tasks.removeAt(index);
-              });
-            }
+            _confirmDelete(taskId).then((result) {
+              if (result) {
+                setState(() {
+                  _tasks.removeAt(index);
+                });
+              }
+            });
           },
           child: Text('Delete'),
         ),
+
 
       );
     },
