@@ -1,0 +1,20 @@
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $limit = 5; // Number of records per page
+    $offset = ($page - 1) * $limit;
+    
+    $sql = "SELECT id, kunde, dato, timer, description FROM tasks  ORDER BY id DESC LIMIT $limit OFFSET $offset";
+    echo $sql;
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        $tasks = array();
+        while($row = $result->fetch_assoc()) {
+            array_push($tasks, $row);
+        }
+        echo json_encode(array('status' => 'success', 'tasks' => $tasks));
+    } else {
+        echo json_encode(array('status' => 'error', 'message' => 'No records found.'));
+    }
+}

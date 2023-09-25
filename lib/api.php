@@ -42,8 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $limit = 5; // Number of records per page
-    $offset = ($page - 1) * $limit;
 
+    error_log("Received Page: $page, Limit: $limit\n");  // Debugging line
+
+    $offset = ($page - 1) * $limit;
 
     $sql = "SELECT id, kunde, dato, timer, description FROM tasks  ORDER BY id DESC LIMIT $limit OFFSET $offset";
     $result = $conn->query($sql);
