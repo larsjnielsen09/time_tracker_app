@@ -39,7 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 // Check for GET request to read data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT id, kunde, dato, timer, description FROM tasks";
+
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $limit = 5; // Number of records per page
+    $offset = ($page - 1) * $limit;
+
+
+    $sql = "SELECT id, kunde, dato, timer, description FROM tasks  ORDER BY id DESC LIMIT $limit OFFSET $offset";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {
