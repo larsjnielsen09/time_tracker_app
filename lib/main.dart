@@ -3,12 +3,60 @@ import 'package:flutter/material.dart';
 import 'view_entries_screen.dart';  // Import the ViewEntriesScreen class
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+Database? taskDatabase;
+
+void initializeDatabase() async {
+  taskDatabase = await openDatabase(
+    join(await getDatabasesPath(), 'task_database.db'),
+    onCreate: (db, version) {
+      return db.execute(
+        "CREATE TABLE tasks(id INTEGER PRIMARY KEY, kunde TEXT, dato TEXT, timer INTEGER, description TEXT)",
+      );
+       print("Database initialized");
+    },
+    version: 1,
+  );
+  print("Database initialized");
+}
 
 
 
 void main() {
   runApp(MyApp());
+  initializeDatabase();
 }
+
+class Task {
+  final int? id;
+  final String kunde;
+  final String dato;
+  final int timer;
+  final String description;
+
+  Task({
+    this.id,
+    required this.kunde,
+    required this.dato,
+    required this.timer,
+    required this.description,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'kunde': kunde,
+      'dato': dato,
+      'timer': timer,
+      'description': description,
+    };
+  }
+}
+
+
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -51,51 +99,46 @@ class _HomeScreenState extends State<HomeScreen>{
       });
   }
 
-Future<void> insertData() async {
-  final url = Uri.parse('https://service112.dk/api/api.php');
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode({
-      'kunde': kunde,
-      'dato': dato?.toIso8601String(),
-      'timer': timer,
-      'description': description,
-    }),
+Future<void> insertData(Task newTask) async {
+  // Insert the Task into the correct table.
+  await taskDatabase!.insert(
+    'tasks',
+    newTask.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
   );
+}
 
-  if (response.statusCode == 200) {
-    print('Data inserted successfully');
+
+void _saveForm() async {
+  final isValid = _formKey.currentState?.validate() ?? false;
+  if (!isValid) {
+    return;
+  }
+  _formKey.currentState?.save();
+  
+  // Ensure all variables are non-null before creating the Task object
+  if (kunde != null && dato != null && timer != null && description != null) {
+    Task newTask = Task(
+      kunde: kunde!,
+      dato: dato!.toIso8601String(),
+      timer: timer!,
+      description: description!,
+    );
+    await insertData(newTask);  // Note: Awaiting the async function
+    _formKey.currentState?.reset();
   } else {
-    print('Failed to insert data');
+    // Handle the case when one of the variables is null
+    print("One or more fields are null");
   }
 }
 
 
-  void _saveForm() async {
-    
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) {
-      return;
-    }
-    _formKey.currentState?.save();
-    print(kunde);
-    print(dato);
-    print(timer);
-    print(description);
-    // Here, you can write code to save these to a database
-     // Call insertData to post the form data to your API
-  await insertData();  // Note: Awaiting the async function
 
-  _formKey.currentState?.reset();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('TimeTracker, by Lars Nielsen')),
+      appBar: AppBar(title: Text('TimeTracker Local, by Lars Nielsen')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
